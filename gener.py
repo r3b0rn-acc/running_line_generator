@@ -39,7 +39,10 @@ def generate(text, text_colour='black', background_colour='white'):
     for frame in range(frames_num):
         image = Image.fromarray(array.astype(np.uint8))
         drawer = ImageDraw.Draw(image)
-        drawer.text((-1*frame*delta + WIDTH, 0), text, font=font, fill=text_colour)
+        drawer.text((-1*frame*delta + WIDTH, (HEIGHT-text_size[1]) / 2),
+                    text,
+                    font=font,
+                    fill=text_colour)
         video.append(image)
 
     clip = ImageSequenceClip([np.array(frame) for frame in video], fps=fps)
