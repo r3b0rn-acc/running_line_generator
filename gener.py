@@ -19,25 +19,28 @@ class Colour:
 
 
 def generate(text, text_colour='black', background_colour='white'):
+    WIDTH = 100
+    HEIGHT = 100
+
     text_colour = Colour(text_colour).colour
     background_colour = Colour(background_colour).colour
 
-    array = np.array([[background_colour for _ in range(100)] for _ in range(100)])
+    array = np.array([[background_colour for _ in range(WIDTH)]
+                      for _ in range(HEIGHT)])
     seconds = 3
     fps = 24
     frames_num = fps * seconds
 
     font = ImageFont.truetype("arial.ttf", 100)
     text_size = ImageDraw.Draw(Image.fromarray(array.astype(np.uint8))).textsize(text, font=font)
-    delta = text_size[0] // frames_num
+    delta = (text_size[0] + WIDTH) / (frames_num-1)
 
     video = []
     for frame in range(frames_num):
         image = Image.fromarray(array.astype(np.uint8))
         drawer = ImageDraw.Draw(image)
-        drawer.text((-1*frame*delta, 0), text, font=font, fill=text_colour)
+        drawer.text((-1*frame*delta + WIDTH, 0), text, font=font, fill=text_colour)
         video.append(image)
-
 
     clip = ImageSequenceClip([np.array(frame) for frame in video], fps=fps)
     clip.write_videofile('video.mp4')
